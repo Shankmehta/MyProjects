@@ -1,0 +1,221 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        /* Gradient background for the whole page */
+        
+        body {
+            background: linear-gradient(to bottom right, #3a7bd5, #00d2ff); 
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        /* Centering the table */
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 30px;
+            background-color: grey;
+            /* rgba(255, 255, 255, 0.1); */ /* Semi-transparent white */
+            border-radius: 10px;
+        }
+
+        /* Table Header Styling */
+        th {
+            background-color: #1e3c72;
+            color: black;
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        /* Table Row Styling */
+        td {
+            text-align: center;
+            color:white;
+            padding: 8px;
+            font-size: 1.1em;
+        }
+
+        /* Hover effect on table rows */
+        tr:hover {
+            background-color:orange 
+            /* rgba(255, 255, 255, 0.2) */;
+        }
+
+        /* Heading styling */
+        h1, h2 {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Links inside the table */
+        a {
+            text-decoration: none;
+        }
+
+        /* Styling for the action icons */
+        img {
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Center buttons and links below the table */
+        center {
+            margin-top: 20px;
+        }
+
+        .button-link {
+            color: #fff;
+            background-color: #32cd32;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-link:hover {
+            background-color: #28a745;
+        }
+
+        /* Add spacing between images */
+        .icon-link {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:if="${!studentData.empty}">
+        <h1>Student Report</h1>
+       
+         <center>
+        <h2 th:text="${resultMsg}"></h2>
+        <a th:href="@{/student/studentAdd}" class="button-link">
+            <img th:src="@{/images/add.jpeg}" width="40" height="50px"> Add Student
+        </a>
+        <a th:href="@{/student/}" class="button-link">
+            <img th:src="@{/images/home.png}" width="40" height="50px"> Home
+        </a>
+    </center>
+    <br>
+        <table border="1" align="center">
+            <tr>
+                <th>
+    Student No <br>
+    <button onclick="sortTable('sno', 'asc')">↑</button><br>
+    <button onclick="sortTable('sno', 'desc')">↓</button>
+</th>
+<th>
+    Student Name <br>
+    <button onclick="sortTable('sname', 'asc')">↑</button><br>
+    <button onclick="sortTable('sname', 'desc')">↓</button>
+</th>
+<th>
+    Address <br>
+    <button onclick="sortTable('saddress', 'asc')">↑</button><br>
+    <button onclick="sortTable('saddress', 'desc')">↓</button>
+</th>
+<th>
+    Fees <br>
+    <button onclick="sortTable('fees', 'asc')">↑</button><br>
+    <button onclick="sortTable('fees', 'desc')">↓</button>
+</th>
+                
+                <th>Operation</th>
+            </tr>
+             <tr>
+         <th><input type="number" id="filterNo" oninput="debouncedFilterTable()" placeholder="Filter by Sno"min="0"></th>
+        <th><input type="text" id="filterName" oninput="debouncedFilterTable()" placeholder="Filter by Sname"></th>
+        <th colspan="2"></th> <!-- No filters for Addres and Fees -->
+        <th></th>
+    </tr>
+            <tr th:each="student:${studentData}">
+                <td><span th:text="${student.sno}" /></td>
+                <td><span th:text="${student.sname}" /></td>
+                <td><span th:text="${student.saddress}" /></td>
+                <td><span th:text="${student.fees}" /></td>
+                <td>
+                    <a th:href="@{/student/edit(no=${student.sno})}">
+                        <img th:src="@{/images/edit.png}" width="30px" height="30px" class="icon-link">
+                    </a>
+                    <a th:href="@{/student/delete(no=${student.sno})}" onclick="return confirm('Do you want to delete the Student')">
+                        <img th:src="@{/images/delete.png}" width="30px" height="30px" class="icon-link">
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${studentData.empty}">
+        <h1>Student Not Found</h1>
+    </div>
+
+   
+
+ <script>
+//Debounce function to delay execution
+ function debounce(func, delay) {
+     let timeoutId;
+     return function (...args) {
+         clearTimeout(timeoutId);
+         timeoutId = setTimeout(() => func.apply(this, args), delay);
+     };
+ }
+
+ // Filter function
+ function filterTable() {
+     const snoFilter = document.getElementById("filterNo").value;
+     const nameFilter = document.getElementById("filterName").value;
+
+     let url = "/student/filter?";
+     let hasParam = false;
+
+     // Add Sno filter if present
+     if (snoFilter) {
+         url += `filterBySno=${encodeURIComponent(snoFilter)}`;
+         hasParam = true;
+     }
+
+     // Add Name filter if present
+     if (nameFilter) {
+         if (hasParam) {
+             url += "&";
+         }
+         url += `filterBySname=${encodeURIComponent(nameFilter)}`;
+     }
+
+     console.log(url); // Debugging the generated URL
+     // Perform redirection (if required) or AJAX call to filter results
+     window.location.href = url;
+ }
+
+ // Debounced version of filterTable with 500ms delay
+ const debouncedFilterTable = debounce(filterTable, 500);
+
+ </script>
+
+     <script>
+    function sortTable(sortBy, order) {
+        let url = `/student/sort?sortBy=${sortBy}&order=${order}`;
+        window.location.href = url;
+    }
+</script>
+   
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url("/images/login.jpeg") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f8f9fa;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #f8f9fa;
+            width:80%;        }
+        .form-group input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            border-color: #28a745;
+            outline: none;
+            
+        }
+        .error {
+            color: #ff4d4d;
+            font-size: 12px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            text-align: center;
+            color: #ff4d4d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form th:action="@{/student/login}" method="post" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username (CAPITAL LETTERS ONLY)" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password (CAPITAL LETTERS ONLY)" required>
+            </div>
+            <p th:if="${loginError}" th:text="${loginError}" class="error-message"></p>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script>
+        // JavaScript validation for uppercase letters
+        function validateForm() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const uppercasePattern = /^[A-Z]+$/;
+
+            if (!uppercasePattern.test(username)) {
+                alert("Username must contain only uppercase letters!");
+                return false;
+            }
+            if (!uppercasePattern.test(password)) {
+                alert("Password must contain only uppercase letters!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
+

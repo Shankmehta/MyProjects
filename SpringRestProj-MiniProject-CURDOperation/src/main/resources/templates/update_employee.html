@@ -1,0 +1,106 @@
+
+
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        /* Gradient background for the page */
+        body {
+            background: linear-gradient(to bottom right, #6a11cb, #2575fc); /* Gradient from purple to blue */
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Form container styling */
+        form {
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        input[type="text"], input[type="submit"], input[type="reset"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        input[type="submit"], input[type="reset"] {
+            cursor: pointer;
+            background-color: #32cd32;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover, input[type="reset"]:hover {
+            background-color: #28a745;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Update Student</h1>
+
+    <form th:action="@{/student/edit}" th:object="${student}" method="post">
+        <table align="center">
+            <tr>
+                <td>Student Number :</td>
+                <td><input type="text" th:field="*{sno}" readonly="true" /></td>
+            </tr>
+            <tr>
+                <td>Student Name :</td>
+                <td><input type="text" th:field="*{sname}" /></td>
+            </tr>
+            <tr>
+                <td>Student Address :</td>
+                <td><input type="text" th:field="*{saddress}" /></td>
+            </tr>
+            <tr>
+                <td>Student Fees :</td>
+                <td><input type="text" th:field="*{fees}" /></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Update student"></td>
+                <td><input type="reset" value="Cancel"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
